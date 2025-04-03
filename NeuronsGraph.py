@@ -31,10 +31,10 @@ class NeuronsGraph:
 
         return synapses_activation
 
-    def impact_spike(self, spike_threshold: int):
+    def impact_spike(self, spike_threshold: int, n_spikes: int):
         for neuron in self.neurons:
             # The membrane potential cannot be greater than the spike threshold
-            neuron.membrane_potential = min(neuron.membrane_potential + 1, spike_threshold)
+            neuron.membrane_potential = min(neuron.membrane_potential + n_spikes, spike_threshold)
 
 if __name__ == "__main__":
     n_neurons = 5

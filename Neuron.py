@@ -29,8 +29,6 @@ class Neuron:
 
     def spike(self):
         self.membrane_potential = 0
-        if not self.is_synapse_activated:
-            self.is_synapse_activated = True
 
 
 if __name__ == "__main__":
