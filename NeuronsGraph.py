@@ -14,6 +14,9 @@ class NeuronsGraph:
     def __getitem__(self, index: int) -> Neuron:
         return self.neurons[index]
 
+    def index(self, neuron: Neuron):
+        return self.neurons.index(neuron)
+
     def get_potentials(self) -> list[int]:
         potentials = [0] * self.size
         for i, neuron in enumerate(self.neurons):
@@ -28,11 +31,17 @@ class NeuronsGraph:
 
         return synapses_activation
 
+    def impact_spike(self, spike_threshold: int):
+        for neuron in self.neurons:
+            # The membrane potential cannot be greater than the spike threshold
+            neuron.membrane_potential = min(neuron.membrane_potential + 1, spike_threshold)
 
 if __name__ == "__main__":
     n_neurons = 5
     theta = 3
     initial_membrane_potential = [random.randint(0, theta) for _ in range(n_neurons)]
-    initial_synapses_activation = [random.randint(0, 1) for _ in range(n_neurons)]
+    initial_synapses_activation = [bool(random.randint(0, 1)) for _ in range(n_neurons)]
     graph = NeuronsGraph(n_neurons, initial_membrane_potential, initial_synapses_activation)
     print(graph[0])
+    for neuron in graph:
+        print(graph.index(neuron))

@@ -1,3 +1,4 @@
+from random import random
 
 
 class Neuron:
@@ -11,6 +12,14 @@ class Neuron:
     def __repr__(self):
         activated_str = "Active" if self.is_synapse_activated else "Inactive"
         return f"{activated_str} neuron with membrane potential = {self.membrane_potential}."
+
+    @staticmethod
+    def is_spiking(spike_proba: float) -> bool:
+        return random() < spike_proba
+
+    @staticmethod
+    def is_deactivating(deactivation_proba: float) -> bool:
+        return random() < deactivation_proba
 
     def deactivate(self):
         self.is_synapse_activated = False
