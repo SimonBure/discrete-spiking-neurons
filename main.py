@@ -2,11 +2,13 @@ import random
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+from tqdm import tqdm
+import time
 from NeuronsGraph import NeuronsGraph
 
 
 def get_proba_from_rate(rate: float, time_interval: float) -> float:
-    return math.exp(-rate * time_interval)
+    return 1 - math.exp(-rate * time_interval)
 
 
 if __name__ == '__main__':
@@ -17,6 +19,7 @@ if __name__ == '__main__':
     TIME_INTERVAL = 0.1
     max_time = N_ITERATIONS * TIME_INTERVAL
 
+    EDGE_PROBABILITY = 1.0
     SPIKE_THRESHOLD = 3  # theta
     SPIKE_RATE = 1.  # beta
     DEACTIVATION_RATE = 1.  # lambda
@@ -25,7 +28,7 @@ if __name__ == '__main__':
 
     initial_membrane_potential = [random.randint(0, SPIKE_THRESHOLD) for _ in range(N_NEURONS)]
     initial_synapses_activation = [bool(random.randint(0, 1)) for _ in range(N_NEURONS)]
-    neurons_graph = NeuronsGraph(N_NEURONS, initial_membrane_potential, initial_synapses_activation)
+    neurons_graph = NeuronsGraph(N_NEURONS, initial_membrane_potential, initial_synapses_activation, EDGE_PROBABILITY)
 
     spikes_ts = [[0] * N_NEURONS] * N_ITERATIONS
     potentials_ts = [initial_membrane_potential] * N_ITERATIONS
