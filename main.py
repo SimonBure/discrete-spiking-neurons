@@ -12,15 +12,15 @@ def get_proba_from_rate(rate: float, time_interval: float) -> float:
 
 
 if __name__ == '__main__':
-    random.seed(0)
+    random.seed(1)
 
     N_NEURONS = 5
-    N_ITERATIONS = 100
+    N_ITERATIONS = 10000
     TIME_INTERVAL = 0.1
     max_time = N_ITERATIONS * TIME_INTERVAL
 
     EDGE_PROBABILITY = 1.0
-    SPIKE_THRESHOLD = 3  # theta
+    SPIKE_THRESHOLD = 4  # theta
     SPIKE_RATE = 1.  # beta
     DEACTIVATION_RATE = 1.  # lambda
     spike_proba = get_proba_from_rate(SPIKE_RATE, TIME_INTERVAL)
@@ -34,7 +34,11 @@ if __name__ == '__main__':
     potentials_ts = [initial_membrane_potential] * N_ITERATIONS
     activations_ts = [initial_synapses_activation] * N_ITERATIONS
 
-    for i in range(1, N_ITERATIONS):
+    time_before = time.time()
+
+    neurons_graph.draw()
+
+    for i in tqdm(range(1, N_ITERATIONS)):
         spikes = [0] * N_NEURONS
         n_spikes = 0
         index_spikes = []
@@ -60,6 +64,10 @@ if __name__ == '__main__':
         spikes_ts[i] = spikes
         potentials_ts[i] = neurons_graph.get_potentials()
         activations_ts[i] = neurons_graph.get_synapses_activation()
+
+    time_after = time.time()
+    simulation_duration = time_after - time_before
+    print(f"Simulation duration = {simulation_duration} sec")
 
     data = np.array(potentials_ts)
 
