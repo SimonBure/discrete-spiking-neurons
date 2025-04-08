@@ -32,6 +32,15 @@ def plot_potentials_ts(potentials_ts: list[list[int]], spike_threshold: int):
     plt.show()
 
 
+def plot_counting_spikes_ts(counting_spikes_ts: list[int]):
+    plt.plot(counting_spikes_ts, grid=True)
+
+    plt.xlabel("Temps", fontsize=16)
+    plt.ylabel("Number of spikes", fontsize=16)
+
+    plt.show()
+
+
 if __name__ == '__main__':
     random.seed(1)
 
@@ -49,7 +58,7 @@ if __name__ == '__main__':
     initial_synapses_activation = [bool(random.randint(0, 1)) for _ in range(N_NEURONS)]
     neurons_graph = NeuronsGraph(N_NEURONS, initial_membrane_potential, initial_synapses_activation, EDGE_PROBABILITY)
 
-    cumulated_spikes_nb_ts = [0] * N_ITERATIONS
+    counting_spikes_ts = [0] * N_ITERATIONS
     spikes = 0
 
     potentials_ts = [initial_membrane_potential] * N_ITERATIONS
@@ -78,7 +87,7 @@ if __name__ == '__main__':
             else:
                 pass
 
-        cumulated_spikes_nb_ts[i] = spikes
+        counting_spikes_ts[i] = spikes
         potentials_ts[i] = neurons_graph.get_potentials()
         activations_ts[i] = neurons_graph.get_synapses_activation()
 
@@ -87,3 +96,4 @@ if __name__ == '__main__':
     print(f"Simulation duration = {simulation_duration} sec")
 
     plot_potentials_ts(potentials_ts, SPIKE_THRESHOLD)
+    plot_counting_spikes_ts(counting_spikes_ts)
