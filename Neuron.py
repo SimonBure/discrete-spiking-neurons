@@ -1,5 +1,3 @@
-from random import random
-
 
 class Neuron:
     id: int
@@ -16,19 +14,14 @@ class Neuron:
         activated_str = "active" if self.is_synapse_activated else "Inactive"
         return f"Neuron {self.id} is {activated_str} with membrane potential = {self.membrane_potential}."
 
-    @staticmethod
-    def is_spiking(spike_proba: float) -> bool:
-        return random() < spike_proba
-
-    @staticmethod
-    def is_deactivating(deactivation_proba: float) -> bool:
-        return random() < deactivation_proba
-
     def get_id(self) -> int:
         return self.id
 
     def get_membrane_potential(self) -> float:
         return self.membrane_potential
+
+    def activate(self):
+        self.is_synapse_activated = True
 
     def deactivate(self):
         self.is_synapse_activated = False
@@ -36,8 +29,11 @@ class Neuron:
     def can_spike(self, spike_threshold: int) -> bool:
         return self.membrane_potential == spike_threshold
 
-    def spike(self):
+    def reset_membrane_potential(self):
         self.membrane_potential = 0
+
+    def increase_membrane_potential(self, spike_threshold: int):
+        self.membrane_potential = min(self.membrane_potential + 1, spike_threshold)
 
 
 if __name__ == "__main__":

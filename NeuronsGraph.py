@@ -7,7 +7,7 @@ from Neuron import Neuron
 class NeuronsGraph:
     size: int
     neurons: list[Neuron]
-    graph: nx.Graph
+    graph: nx.DiGraph
     edge_probability: float
 
     def __init__(self, size: int, initial_membranes_potentials: list[int], initial_synapses_activations: list[bool],
@@ -48,7 +48,7 @@ class NeuronsGraph:
 
     def get_neuron_postsynaptic_neurons(self, neuron: Neuron) -> list[Neuron]:
         neuron_index = self.index(neuron)
-        return list(self.graph.successors(neuron_index))
+        return [self.graph.nodes[n]['neuron'] for n in self.graph.successors(neuron_index)]
 
     def get_potentials(self) -> list[int]:
         potentials = [0] * self.size
@@ -64,6 +64,11 @@ class NeuronsGraph:
 
         return synapses_activation
 
+    def propagate_spike(self, neuron: Neuron, spike_threshold: int):
+        post_synaptic_neurons = self.get_neuron_postsynaptic_neurons(neuron)
+        for n in post_synaptic_neurons:
+            n.increase_membrane_potential(spike_threshold)
+
     def impact_spike(self, spike_threshold: int, n_spikes: int):
         for neuron in self.neurons:
             # The membrane potential cannot be greater than the spike threshold
@@ -71,16 +76,18 @@ class NeuronsGraph:
 
 if __name__ == "__main__":
     random.seed(0)
+
     n_neurons = 5
     theta = 3
+
     initial_membrane_potential = [random.randint(0, theta) for _ in range(n_neurons)]
     initial_synapses_activation = [bool(random.randint(0, 1)) for _ in range(n_neurons)]
+
     graph = NeuronsGraph(n_neurons, initial_membrane_potential, initial_synapses_activation, 1)
 
     for neuron in graph:
-        print(f"Neuron {neuron.id} postsynaptic neighbours indexes: {graph.get_neuron_postsynaptic_neurons(neuron)}")
+        print(graph.get_neuron_postsynaptic_neurons(neuron))
 
     print(graph)
 
     graph.draw()
-
