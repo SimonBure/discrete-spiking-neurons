@@ -1,6 +1,7 @@
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 from Neuron import Neuron
 
 
@@ -38,9 +39,11 @@ class NeuronsGraph:
     def draw(self):
         labels = {i: (i, pot) for (i, pot) in enumerate(self.get_potentials())}
         pos = nx.spring_layout(self.graph)
-        colors = ['limegreen' if n.is_synapse_activated else 'tomato' for n in self.neurons]
+        colors = ['cyan' if n.is_synapse_activated else 'orange' for n in self.neurons]
         nx.draw(self.graph, pos, with_labels=True, labels=labels, font_color='black', node_color=colors,
                 node_size=500, edge_color='black', arrows=True)
+        plt.legend(handles=[mpatches.Patch(color='cyan', label='Activated neuron'),
+                            mpatches.Patch(color='orange', label='Deactivated neuron')])
         plt.show()
 
     def index(self, neuron: Neuron) -> int:
@@ -73,6 +76,7 @@ class NeuronsGraph:
         for neuron in self.neurons:
             # The membrane potential cannot be greater than the spike threshold
             neuron.membrane_potential = min(neuron.membrane_potential + n_spikes, spike_threshold)
+
 
 if __name__ == "__main__":
     random.seed(0)
