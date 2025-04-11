@@ -42,7 +42,7 @@ def plot_counting_spikes_ts(counting_spikes_ts: list[int]):
 
 
 if __name__ == '__main__':
-    random.seed(1)
+    random.seed(0)
 
     N_NEURONS = 5
     N_ITERATIONS = 100
@@ -69,23 +69,26 @@ if __name__ == '__main__':
     neurons_graph.draw()
 
     for i in tqdm(range(1, N_ITERATIONS)):
-
+        spiking_neurons_indexes = []
         for j, n in enumerate(neurons_graph):
             random_float = random.random()
+
             if random_float < SPIKE_PROBA:
-                spikes += 1
                 if n.can_spike(SPIKE_THRESHOLD):
+                    spikes += 1
+                    spiking_neurons_indexes.append(j)
+
                     if n.is_synapse_activated:
-                        n.reset_membrane_potential()
                         neurons_graph.propagate_spike(n, SPIKE_THRESHOLD)
                     else:
                         n.activate()
-                else:
-                    pass
+
             elif SPIKE_PROBA < random_float < DEACTIVATION_PROBA and n.is_synapse_activated:
                 n.deactivate()
-            else:
-                pass
+
+        # Resetting neurons that have spiked
+        for j in spiking_neurons_indexes:
+            neurons_graph[j].reset_membrane_potential()
 
         counting_spikes_ts[i] = spikes
         potentials_ts[i] = neurons_graph.get_potentials()
